@@ -1,0 +1,38 @@
+version: '3.3'
+services:
+    db:
+        image: postgres
+        restart: always
+        ports:
+            - 5432:5432
+        volumes:
+            - ./pgdatamarvel:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: marvel
+            POSTGRES_PASSWORD: marvel
+            POSTGRES_DB: marvel
+        container_name: marvel-postgres
+    
+    redis:
+        image: redis
+        ports:
+            - 6378:6379
+        restart: always
+        container_name: marvel-redis
+
+    marvelServiceContainer:
+        image : marvel-heroes-backend-image
+        restart: always
+        ports:
+            - 3000:3000
+            - 9090:9090
+        container_name: marvelServiceContainer
+        environment:
+            ENV: production
+            PORT: 3000
+            PG_DATASOURCE: "user=marvel dbname=marvel sslmode=disable password=marvel host=db port=5432"
+            JWT_SECRET_KEY: marvel
+            REDIS_ADDR: redis:6379
+            GRPC_PORT: 9090
+            SERVER_CRT: 1
+            SERVER_KEY: 2

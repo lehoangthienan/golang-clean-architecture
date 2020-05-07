@@ -1,0 +1,30 @@
+version: '3.3'
+services:
+    db:
+        image: postgres
+        restart: always
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_USER: marvel
+            POSTGRES_PASSWORD: marvel
+            POSTGRES_DB: marvel
+        container_name: marvel-postgres
+
+    db-test:
+        image: postgres
+        restart: always
+        environment:
+          POSTGRES_PASSWORD: marveltest
+          POSTGRES_DB: marvel-test
+        ports:
+          - 5439:5432
+
+    pgAdmin:
+        image: dpage/pgadmin4
+        ports:
+            - 8080:80
+        environment:
+            PGADMIN_DEFAULT_EMAIL: marvel@gmail.com
+            PGADMIN_DEFAULT_PASSWORD: marvel
+        container_name: marvel-pgAdmin

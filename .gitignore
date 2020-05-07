@@ -1,0 +1,11 @@
+.idea/
+bin/
+
+.env_migrator.yaml
+.env
+
+certs/
+gen_certs.sh
+
+go.mod
+go.sum
