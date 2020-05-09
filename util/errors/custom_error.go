@@ -118,3 +118,9 @@ var (
 	UpdateUserFailedError  = newError("Update user failed", http.StatusInternalServerError)
 	UserNotExistError      = newError("User Not Exist Error", http.StatusInternalServerError)
 )
+
+// Auth
+var (
+	AccountNotFoundError = newError("Account Not Found Error", http.StatusNotFound)
+	AccessDeniedError    = newError("Access Denied Error", http.StatusForbidden)
+)

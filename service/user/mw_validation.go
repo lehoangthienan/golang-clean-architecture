@@ -13,6 +13,7 @@ type validatingMiddleware struct {
 	Service
 }
 
+// ValidatingMiddleware func
 func ValidatingMiddleware() Middleware {
 	return func(next Service) Service {
 		return &validatingMiddleware{Service: next}
