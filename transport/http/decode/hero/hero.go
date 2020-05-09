@@ -46,3 +46,16 @@ func DeleteRequest(_ context.Context, r *http.Request) (interface{}, error) {
 
 	return req, err
 }
+
+// GetHeroesRequest func
+func GetHeroesRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var req request.GetHeroes
+
+	skip := r.URL.Query().Get("skip")
+	limit := r.URL.Query().Get("limit")
+
+	req.Skip = skip
+	req.Limit = limit
+
+	return req, nil
+}

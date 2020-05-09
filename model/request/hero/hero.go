@@ -17,3 +17,9 @@ type UpdateHero struct {
 type DeleteHero struct {
 	ParamHeroID string `json:"heroID,omitempty"`
 }
+
+// GetHeroes Struct
+type GetHeroes struct {
+	Skip  string `json:"skip,omitempty"`
+	Limit string `json:"limit,omitempty"`
+}

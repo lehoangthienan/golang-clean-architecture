@@ -8,7 +8,7 @@ import (
 	"github.com/lehoangthienan/marvel-heroes-backend/transport/http/encode"
 )
 
-// Router represents campaign-specific routings
+// Router represents user-specific routings
 func Router(endpoints endpoints.Endpoints, options []httptransport.ServerOption) func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Post("/", httptransport.NewServer(

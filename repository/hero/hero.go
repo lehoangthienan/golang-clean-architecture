@@ -2,6 +2,7 @@ package hero
 
 import (
 	"context"
+	"sync"
 
 	"github.com/jinzhu/gorm"
 	"github.com/lehoangthienan/marvel-heroes-backend/model/domain"
@@ -116,4 +117,68 @@ func (r *heroRepo) Delete(ctx context.Context, pool *transaction.Pool, req *requ
 	return &responseModel.DeleteHero{
 		Hero: hero,
 	}, err
+}
+
+func (r *heroRepo) GetHeroes(ctx context.Context, req *requestModel.GetHeroes) (*responseModel.GetHeroes, error) {
+	res := &responseModel.GetHeroes{}
+	db, _ := helper.UseDBConn(r.db, nil)
+
+	skip := req.Skip
+	limit := req.Limit
+
+	if req.Skip == "" {
+		skip = "-1"
+	}
+
+	if req.Limit == "" {
+		limit = "-1"
+	}
+
+	hereos := []domain.Hero{}
+	var total int
+
+	var err error
+
+	findHeroWG := sync.WaitGroup{}
+
+	findHeroWG.Add(1)
+	go func() {
+		defer findHeroWG.Done()
+		errFunc := db.Limit(limit).Offset(skip).Order("created_at desc").Find(&hereos).Error
+		if errFunc != nil {
+			err = errFunc
+		}
+	}()
+
+	findHeroWG.Add(1)
+	go func() {
+		defer findHeroWG.Done()
+		errFunc := db.Table("heros").Count(&total).Error
+		if errFunc != nil {
+			err = errFunc
+		}
+	}()
+
+	findHeroWG.Wait()
+
+	if err != nil {
+		return res, err
+	}
+
+	heroesRes := make([]*domain.Hero, len(hereos))
+
+	wg := sync.WaitGroup{}
+	for idx, hero := range hereos {
+		wg.Add(1)
+		go func(product domain.Hero, idx int) {
+			defer wg.Done()
+			heroesRes[idx] = &hero
+		}(hero, idx)
+	}
+	wg.Wait()
+
+	res.Heroes = heroesRes
+	res.Total = total
+
+	return res, err
 }
