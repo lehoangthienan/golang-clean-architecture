@@ -1,0 +1,22 @@
+package hero
+
+import (
+	"github.com/go-kit/kit/endpoint"
+	"github.com/lehoangthienan/marvel-heroes-backend/service"
+)
+
+// HeroEndpoint struct
+type HeroEndpoint struct {
+	CreateHero endpoint.Endpoint
+	UpdateHero endpoint.Endpoint
+	DeleteHero endpoint.Endpoint
+}
+
+// NewEndpoint func
+func NewEndpoint(s service.Service) HeroEndpoint {
+	return HeroEndpoint{
+		CreateHero: MakeCreateUserEndpoint(s),
+		UpdateHero: MakeUpdateEndpoint(s),
+		DeleteHero: MakeDeleteEndpoint(s),
+	}
+}

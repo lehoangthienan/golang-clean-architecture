@@ -14,8 +14,8 @@ type Middlewares struct {
 func MakeHTTPpMiddleware(s service.Service) Middlewares {
 	return Middlewares{
 		AuthMiddleware: auth.AuthMiddleware{
-			AuthUser:  auth.MakeAuthModeratorMiddleware(s),
-			AuthAdmin: auth.MakeAuthAdminMiddleware(s),
+			AuthModerator: auth.MakeAuthModeratorMiddleware(s),
+			AuthAdmin:     auth.MakeAuthAdminMiddleware(s),
 		},
 	}
 }

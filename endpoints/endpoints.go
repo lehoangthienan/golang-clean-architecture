@@ -2,6 +2,7 @@ package endpoints
 
 import (
 	"github.com/go-kit/kit/endpoint"
+	"github.com/lehoangthienan/marvel-heroes-backend/endpoints/hero"
 	"github.com/lehoangthienan/marvel-heroes-backend/endpoints/index"
 	"github.com/lehoangthienan/marvel-heroes-backend/endpoints/user"
 	"github.com/lehoangthienan/marvel-heroes-backend/service"
@@ -11,6 +12,7 @@ import (
 type Endpoints struct {
 	IndexEndpoint endpoint.Endpoint
 	UserEndpoint  user.UserEndpoint
+	HeroEndpoint  hero.HeroEndpoint
 }
 
 // MakeServerEndpoints func
@@ -18,5 +20,6 @@ func MakeServerEndpoints(s service.Service) Endpoints {
 	return Endpoints{
 		IndexEndpoint: index.MakeIndexEndpoints(),
 		UserEndpoint:  user.NewEndpoint(s),
+		HeroEndpoint:  hero.NewEndpoint(s),
 	}
 }
