@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/lehoangthienan/marvel-heroes-backend/service/auth"
+	"github.com/lehoangthienan/marvel-heroes-backend/service/hero"
 	"github.com/lehoangthienan/marvel-heroes-backend/service/user"
 )
 
@@ -9,4 +10,5 @@ import (
 type Service struct {
 	UserService user.Service
 	AuthService auth.Service
+	HeroService hero.Service
 }

@@ -4,7 +4,8 @@ import (
 	"github.com/go-kit/kit/endpoint"
 )
 
+// AuthMiddleware struct
 type AuthMiddleware struct {
-	AuthUser  endpoint.Middleware
-	AuthAdmin endpoint.Middleware
+	AuthModerator endpoint.Middleware
+	AuthAdmin     endpoint.Middleware
 }

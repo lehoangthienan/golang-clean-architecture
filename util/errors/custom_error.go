@@ -124,3 +124,15 @@ var (
 	AccountNotFoundError = newError("Account Not Found Error", http.StatusNotFound)
 	AccessDeniedError    = newError("Access Denied Error", http.StatusForbidden)
 )
+
+//Hero
+var (
+	MissingNameHeroError   = newError("Missing Name Hero Error", http.StatusBadRequest)
+	MissingHeroPowerError  = newError("Missing Hero Power Error", http.StatusBadRequest)
+	LengthHeroPowerError   = newError("Length Hero Power Error", http.StatusBadRequest)
+	LengthNameHeroError    = newError("Length Name Hero Error", http.StatusBadRequest)
+	CreateHeroFailedError  = newError("Create hero failed", http.StatusInternalServerError)
+	UpdateHeroFailedError  = newError("Update hero failed", http.StatusInternalServerError)
+	HeronameIsExistedError = newError("Hero name Is Existed Error", http.StatusBadRequest)
+	HeroNotExistError      = newError("Hero Not Exist Error", http.StatusBadRequest)
+)

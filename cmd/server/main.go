@@ -14,11 +14,15 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/lehoangthienan/marvel-heroes-backend/endpoints"
 	repo "github.com/lehoangthienan/marvel-heroes-backend/repository"
+	heroRepo "github.com/lehoangthienan/marvel-heroes-backend/repository/hero"
 	userRepo "github.com/lehoangthienan/marvel-heroes-backend/repository/user"
 	"github.com/lehoangthienan/marvel-heroes-backend/service"
+	authSvc "github.com/lehoangthienan/marvel-heroes-backend/service/auth"
+	heroSvc "github.com/lehoangthienan/marvel-heroes-backend/service/hero"
 	userSvc "github.com/lehoangthienan/marvel-heroes-backend/service/user"
 	serviceGrpc "github.com/lehoangthienan/marvel-heroes-backend/transport/grpc"
 	serviceHttp "github.com/lehoangthienan/marvel-heroes-backend/transport/http"
+	"github.com/lehoangthienan/marvel-heroes-backend/transport/http/middlewares"
 	"github.com/lehoangthienan/marvel-heroes-backend/util/config/db/pg"
 	envConfig "github.com/lehoangthienan/marvel-heroes-backend/util/config/env"
 
@@ -32,7 +36,6 @@ import (
 func main() {
 	var isProduction = envConfig.GetENV() == "production"
 	if !isProduction {
-		// err := godotenv.Load("../../.env")
 		err := godotenv.Load()
 		if err != nil {
 			panic(fmt.Sprintf("failed to load .env by error: %v", err))
@@ -71,9 +74,11 @@ func main() {
 		// redisClient, closeRedisConn = redis.NewRedisClient(envConfig.GetRedisAddr())
 
 		userRepo = userRepo.NewRepo(pgDB)
+		heroRepo = heroRepo.NewRepo(pgDB)
 
 		repo = repo.Repository{
 			UserRepository: userRepo,
+			HeroRepository: heroRepo,
 		}
 
 		txSvc   = tx.NewTransactionService(tx.NewConfig(pgDB))
@@ -81,9 +86,19 @@ func main() {
 			userSvc.NewService(repo, txSvc),
 			userSvc.ValidatingMiddleware(),
 		).(userSvc.Service)
+		heroSvc = service.Compose(
+			heroSvc.NewService(repo, txSvc),
+			heroSvc.ValidatingMiddleware(),
+		).(heroSvc.Service)
+		authSvc = service.Compose(
+			authSvc.NewAuthService(pgDB),
+			authSvc.ValidationMiddleware(),
+		).(authSvc.Service)
 
 		s = service.Service{
 			UserService: userSvc,
+			HeroService: heroSvc,
+			AuthService: authSvc,
 		}
 	)
 
@@ -91,10 +106,15 @@ func main() {
 	// defer closeRedisConn()
 
 	endpoints := endpoints.MakeServerEndpoints(s)
+	middlewares := middlewares.MakeHTTPpMiddleware(s)
 
 	var h http.Handler
 	{
-		h = serviceHttp.NewHTTPHandler(endpoints, logger)
+		h = serviceHttp.NewHTTPHandler(
+			middlewares,
+			endpoints,
+			logger,
+		)
 	}
 
 	errs := make(chan error)
