@@ -153,7 +153,7 @@ func (r *heroRepo) GetHeroes(ctx context.Context, req *requestModel.GetHeroes) (
 	findHeroWG.Add(1)
 	go func() {
 		defer findHeroWG.Done()
-		errFunc := db.Table("heros").Count(&total).Error
+		errFunc := db.Model(&domain.Hero{}).Count(&total).Error
 		if errFunc != nil {
 			err = errFunc
 		}
