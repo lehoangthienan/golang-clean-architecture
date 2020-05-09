@@ -14,4 +14,5 @@ type Repository interface {
 	Create(context.Context, *transaction.Pool, *domain.Hero) (*domain.Hero, error)
 	Update(context.Context, *transaction.Pool, *requestModel.UpdateHero) (*responseModel.UpdateHero, error)
 	Delete(context.Context, *transaction.Pool, *requestModel.DeleteHero) (*responseModel.DeleteHero, error)
+	GetHeroes(context.Context, *requestModel.GetHeroes) (*responseModel.GetHeroes, error)
 }

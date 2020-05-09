@@ -70,3 +70,13 @@ func (s *heroService) Delete(ctx context.Context, req requestModel.DeleteHero) (
 
 	return &responseModel.DeleteHero{Hero: hero.Hero}, s.tx.TXCommit(pool)
 }
+
+func (s *heroService) GetHeroes(ctx context.Context, req requestModel.GetHeroes) (*responseModel.GetHeroes, error) {
+	heroes, err := s.repo.HeroRepository.GetHeroes(ctx, &req)
+
+	if err != nil {
+		return nil, errors.UpdateHeroFailedError
+	}
+
+	return heroes, nil
+}

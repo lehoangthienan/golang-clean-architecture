@@ -10,6 +10,7 @@ type HeroEndpoint struct {
 	CreateHero endpoint.Endpoint
 	UpdateHero endpoint.Endpoint
 	DeleteHero endpoint.Endpoint
+	GetHeros   endpoint.Endpoint
 }
 
 // NewEndpoint func
@@ -18,5 +19,6 @@ func NewEndpoint(s service.Service) HeroEndpoint {
 		CreateHero: MakeCreateUserEndpoint(s),
 		UpdateHero: MakeUpdateEndpoint(s),
 		DeleteHero: MakeDeleteEndpoint(s),
+		GetHeros:   MakeGetsEndpoint(s),
 	}
 }

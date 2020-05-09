@@ -43,3 +43,15 @@ func MakeDeleteEndpoint(s service.Service) endpoint.Endpoint {
 		return res, nil
 	}
 }
+
+// MakeGetsEndpoint func
+func MakeGetsEndpoint(s service.Service) endpoint.Endpoint {
+	return func(ctx context.Context, r interface{}) (interface{}, error) {
+		req := r.(request.GetHeroes)
+		res, err := s.HeroService.GetHeroes(ctx, req)
+		if err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+}

@@ -12,6 +12,7 @@ type Service interface {
 	Create(context.Context, req.CreateHero) (*res.CreateHero, error)
 	Update(context.Context, req.UpdateHero) (*res.UpdateHero, error)
 	Delete(context.Context, req.DeleteHero) (*res.DeleteHero, error)
+	GetHeroes(context.Context, req.GetHeroes) (*res.GetHeroes, error)
 }
 
 // Middleware func

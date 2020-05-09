@@ -9,12 +9,18 @@ import (
 	"github.com/lehoangthienan/marvel-heroes-backend/transport/http/middlewares"
 )
 
-// Router represents campaign-specific routings
+// Router represents heroes-specific routings
 func Router(
 	endpoints endpoints.Endpoints,
 	middlewares middlewares.Middlewares,
 	options []httptransport.ServerOption) func(r chi.Router) {
 	return func(r chi.Router) {
+		r.Get("/", httptransport.NewServer(
+			endpoints.HeroEndpoint.GetHeros,
+			heroDecode.GetHeroesRequest,
+			encode.EncodeResponse,
+			options...,
+		).ServeHTTP)
 		r.Post("/", httptransport.NewServer(
 			middlewares.AuthMiddleware.AuthAdmin(
 				endpoints.HeroEndpoint.CreateHero,
