@@ -16,6 +16,7 @@ type userService struct {
 	tx   transaction.TXService
 }
 
+// NewService func
 func NewService(repo repo.Repository, tx transaction.TXService) Service {
 	return &userService{repo: repo, tx: tx}
 }
