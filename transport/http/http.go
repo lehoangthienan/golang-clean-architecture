@@ -12,6 +12,7 @@ import (
 	"github.com/lehoangthienan/marvel-heroes-backend/transport/http/encode"
 	"github.com/lehoangthienan/marvel-heroes-backend/transport/http/middlewares"
 	"github.com/lehoangthienan/marvel-heroes-backend/transport/http/options"
+	groupRoute "github.com/lehoangthienan/marvel-heroes-backend/transport/http/route/group"
 	heroRoute "github.com/lehoangthienan/marvel-heroes-backend/transport/http/route/hero"
 	userRoute "github.com/lehoangthienan/marvel-heroes-backend/transport/http/route/user"
 	"github.com/lehoangthienan/marvel-heroes-backend/util/helper"
@@ -50,6 +51,7 @@ func NewHTTPHandler(
 
 	r.Route("/users", userRoute.Router(endpoints, options))
 	r.Route("/heros", heroRoute.Router(endpoints, middlewares, options))
+	r.Route("/groups", groupRoute.Router(endpoints, middlewares, options))
 
 	return r
 }

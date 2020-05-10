@@ -14,10 +14,12 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/lehoangthienan/marvel-heroes-backend/endpoints"
 	repo "github.com/lehoangthienan/marvel-heroes-backend/repository"
+	groupRepo "github.com/lehoangthienan/marvel-heroes-backend/repository/group"
 	heroRepo "github.com/lehoangthienan/marvel-heroes-backend/repository/hero"
 	userRepo "github.com/lehoangthienan/marvel-heroes-backend/repository/user"
 	"github.com/lehoangthienan/marvel-heroes-backend/service"
 	authSvc "github.com/lehoangthienan/marvel-heroes-backend/service/auth"
+	groupSvc "github.com/lehoangthienan/marvel-heroes-backend/service/group"
 	heroSvc "github.com/lehoangthienan/marvel-heroes-backend/service/hero"
 	userSvc "github.com/lehoangthienan/marvel-heroes-backend/service/user"
 	serviceGrpc "github.com/lehoangthienan/marvel-heroes-backend/transport/grpc"
@@ -73,12 +75,14 @@ func main() {
 		pgDB, closeDB = pg.New(envConfig.GetPGDataSourceEnv())
 		// redisClient, closeRedisConn = redis.NewRedisClient(envConfig.GetRedisAddr())
 
-		userRepo = userRepo.NewRepo(pgDB)
-		heroRepo = heroRepo.NewRepo(pgDB)
+		userRepo  = userRepo.NewRepo(pgDB)
+		heroRepo  = heroRepo.NewRepo(pgDB)
+		groupRepo = groupRepo.NewRepo(pgDB)
 
 		repo = repo.Repository{
-			UserRepository: userRepo,
-			HeroRepository: heroRepo,
+			UserRepository:  userRepo,
+			HeroRepository:  heroRepo,
+			GroupRepository: groupRepo,
 		}
 
 		txSvc   = tx.NewTransactionService(tx.NewConfig(pgDB))
@@ -90,15 +94,20 @@ func main() {
 			heroSvc.NewService(repo, txSvc),
 			heroSvc.ValidatingMiddleware(),
 		).(heroSvc.Service)
+		groupSvc = service.Compose(
+			groupSvc.NewService(repo, txSvc),
+			groupSvc.ValidatingMiddleware(),
+		).(groupSvc.Service)
 		authSvc = service.Compose(
 			authSvc.NewAuthService(pgDB),
 			authSvc.ValidationMiddleware(),
 		).(authSvc.Service)
 
 		s = service.Service{
-			UserService: userSvc,
-			HeroService: heroSvc,
-			AuthService: authSvc,
+			UserService:  userSvc,
+			HeroService:  heroSvc,
+			AuthService:  authSvc,
+			GroupService: groupSvc,
 		}
 	)
 

@@ -16,7 +16,7 @@ type HeroEndpoint struct {
 // NewEndpoint func
 func NewEndpoint(s service.Service) HeroEndpoint {
 	return HeroEndpoint{
-		CreateHero: MakeCreateUserEndpoint(s),
+		CreateHero: MakeCreateHeroEndpoint(s),
 		UpdateHero: MakeUpdateEndpoint(s),
 		DeleteHero: MakeDeleteEndpoint(s),
 		GetHeros:   MakeGetsEndpoint(s),
