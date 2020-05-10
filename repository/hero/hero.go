@@ -18,6 +18,7 @@ type heroRepo struct {
 	db *gorm.DB
 }
 
+// NewRepo func
 func NewRepo(db *gorm.DB) Repository {
 	return &heroRepo{db: db}
 }
@@ -63,6 +64,7 @@ func (r *heroRepo) Update(ctx context.Context, pool *transaction.Pool, req *requ
 	}
 
 	err := db.Find(hero, hero).Error
+
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			err = errors.HeroNotExistError

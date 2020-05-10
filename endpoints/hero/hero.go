@@ -8,8 +8,8 @@ import (
 	"github.com/lehoangthienan/marvel-heroes-backend/service"
 )
 
-// MakeCreateUserEndpoint func
-func MakeCreateUserEndpoint(s service.Service) endpoint.Endpoint {
+// MakeCreateHeroEndpoint func
+func MakeCreateHeroEndpoint(s service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, r interface{}) (interface{}, error) {
 		req := r.(request.CreateHero)
 		res, err := s.HeroService.Create(ctx, req)

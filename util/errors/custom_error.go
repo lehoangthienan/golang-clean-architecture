@@ -136,3 +136,15 @@ var (
 	HeronameIsExistedError = newError("Hero name Is Existed Error", http.StatusBadRequest)
 	HeroNotExistError      = newError("Hero Not Exist Error", http.StatusBadRequest)
 )
+
+//Group
+var (
+	MissingNameGroupError   = newError("Missing Name Group Error", http.StatusBadRequest)
+	MissingGroupPowerError  = newError("Missing Group Power Error", http.StatusBadRequest)
+	LengthGroupPowerError   = newError("Length Group Power Error", http.StatusBadRequest)
+	LengthNameGroupError    = newError("Length Name Group Error", http.StatusBadRequest)
+	CreateGroupFailedError  = newError("Create hero failed", http.StatusInternalServerError)
+	UpdateGroupFailedError  = newError("Update hero failed", http.StatusInternalServerError)
+	GroupnameIsExistedError = newError("Group name Is Existed Error", http.StatusBadRequest)
+	GroupNotExistError      = newError("Group Not Exist Error", http.StatusBadRequest)
+)
