@@ -43,3 +43,15 @@ func MakeDeleteEndpoint(s service.Service) endpoint.Endpoint {
 		return res, nil
 	}
 }
+
+// MakeAssignHeroesToGroupEndpoint func
+func MakeAssignHeroesToGroupEndpoint(s service.Service) endpoint.Endpoint {
+	return func(ctx context.Context, r interface{}) (interface{}, error) {
+		req := r.(request.AssignHeroesGroup)
+		res, err := s.GroupService.AssignHeroesGroup(ctx, &req)
+		if err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+}

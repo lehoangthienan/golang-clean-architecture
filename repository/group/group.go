@@ -2,6 +2,7 @@ package group
 
 import (
 	"context"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	"github.com/lehoangthienan/marvel-heroes-backend/model/domain"
@@ -62,7 +63,7 @@ func (r *groupRepo) Update(ctx context.Context, pool *transaction.Pool, req *req
 		},
 	}
 
-	err := db.Find(group, group).Error
+	err := db.Find(group).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			err = errors.GroupNotExistError
@@ -113,4 +114,43 @@ func (r *groupRepo) Delete(ctx context.Context, pool *transaction.Pool, req *req
 	return &responseModel.DeleteGroup{
 		Group: group,
 	}, err
+}
+
+func (r *groupRepo) AssignHeroesGroup(ctx context.Context, pool *transaction.Pool, groupHeros []*domain.GroupHero) ([]*domain.GroupHero, error) {
+	if len(groupHeros) == 0 {
+		return nil, errors.NoRecordsPassedToPerformOperationError("len(cps []*domain.GroupHero)", len(groupHeros))
+	}
+
+	db, _ := helper.UseDBConn(r.db, pool)
+	var err error
+
+	for i := 0; i < len(groupHeros) && err == nil; i++ {
+		if !db.Unscoped().Where(&groupHeros[i]).First(&groupHeros[i]).RecordNotFound() {
+			err = db.Unscoped().Model(&groupHeros[i]).Update(map[string]interface{}{"deleted_at": nil, "updated_at": time.Now()}).Error
+		} else {
+			err = db.Table("group_heros").Create(&groupHeros[i]).Error
+		}
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.db.Preload("Group").Find(&groupHeros).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			err = errors.GroupNotExistError
+		}
+		return nil, err
+	}
+
+	err = r.db.Preload("Hero").Find(groupHeros).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			err = errors.GroupNotExistError
+		}
+		return nil, err
+	}
+
+	return groupHeros, err
 }

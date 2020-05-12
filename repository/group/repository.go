@@ -14,4 +14,5 @@ type Repository interface {
 	Create(context.Context, *transaction.Pool, *domain.Group) (*domain.Group, error)
 	Update(context.Context, *transaction.Pool, *requestModel.UpdateGroup) (*responseModel.UpdateGroup, error)
 	Delete(context.Context, *transaction.Pool, *requestModel.DeleteGroup) (*responseModel.DeleteGroup, error)
+	AssignHeroesGroup(ctx context.Context, pool *transaction.Pool, req []*domain.GroupHero) ([]*domain.GroupHero, error)
 }
