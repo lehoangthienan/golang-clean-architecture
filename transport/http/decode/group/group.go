@@ -46,3 +46,15 @@ func DeleteRequest(_ context.Context, r *http.Request) (interface{}, error) {
 
 	return req, err
 }
+
+// AssignHeroesToGroupRequest func
+func AssignHeroesToGroupRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var req request.AssignHeroesGroup
+	err := json.NewDecoder(r.Body).Decode(&req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return req, err
+}

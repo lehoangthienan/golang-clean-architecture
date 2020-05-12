@@ -27,3 +27,9 @@ type GetHeroes struct {
 	Heroes []*domain.Hero `json:"heroes"`
 	Total  int            `json:"total,omitempty"`
 }
+
+// AssignHeroesGroup Struct
+type AssignHeroesGroup struct {
+	Group  *domain.Group  `json:"group,omitempty"`
+	Heroes []*domain.Hero `json:"heroes,omitempty"`
+}

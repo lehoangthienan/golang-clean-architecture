@@ -22,3 +22,9 @@ type GetGroupHeroes struct {
 	Skip         string `json:"skip,omitempty"`
 	Limit        string `json:"limit,omitempty"`
 }
+
+// AssignHeroesGroup Struct
+type AssignHeroesGroup struct {
+	GroupID string   `json:"groupID,omitempty"`
+	Heroes  []string `json:"heroes,omitempty"`
+}

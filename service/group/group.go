@@ -70,12 +70,34 @@ func (s *groupService) Delete(ctx context.Context, req requestModel.DeleteGroup)
 	return &responseModel.DeleteGroup{Group: group.Group}, s.tx.TXCommit(pool)
 }
 
-// func (s *groupService) GetGroupes(ctx context.Context, req requestModel.GetGroupHeroes) (*responseModel.GetHeroes, error) {
-// 	groupes, err := s.repo.GroupRepository.GetGroupes(ctx, &req)
+func (s *groupService) AssignHeroesGroup(ctx context.Context, req *requestModel.AssignHeroesGroup) ([]*domain.GroupHero, error) {
+	pool, err := s.tx.TXBegin()
+	if err != nil {
+		return nil, err
+	}
 
-// 	if err != nil {
-// 		return nil, errors.UpdateGroupFailedError
-// 	}
+	groupID, err := domain.UUIDFromString(req.GroupID)
+	if err != nil {
+		return nil, err
+	}
 
-// 	return groupes, nil
-// }
+	addList := []*domain.GroupHero{}
+
+	for i := 0; i < len(req.Heroes); i++ {
+		heroID, err := domain.UUIDFromString(req.Heroes[i])
+		if err != nil {
+			return nil, err
+		}
+		addList = append(addList, &domain.GroupHero{GroupID: &groupID, HeroID: &heroID})
+	}
+
+	if len(addList) > 0 {
+		addList, err = s.repo.GroupRepository.AssignHeroesGroup(ctx, pool, addList)
+		if err != nil {
+			s.tx.TXRollBack(pool)
+			return nil, err
+		}
+	}
+
+	return addList, nil
+}

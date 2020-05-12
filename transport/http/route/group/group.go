@@ -23,6 +23,14 @@ func Router(
 			encode.EncodeResponse,
 			options...,
 		).ServeHTTP)
+		r.Post("/assign", httptransport.NewServer(
+			middlewares.AuthMiddleware.AuthModerator(
+				endpoints.GroupEndpoint.AssignHeroesToGroup,
+			),
+			groupDecode.AssignHeroesToGroupRequest,
+			encode.EncodeResponse,
+			options...,
+		).ServeHTTP)
 		r.Put("/{groupID}", httptransport.NewServer(
 			middlewares.AuthMiddleware.AuthModerator(
 				endpoints.GroupEndpoint.UpdateGroup,
