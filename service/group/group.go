@@ -99,5 +99,5 @@ func (s *groupService) AssignHeroesGroup(ctx context.Context, req *requestModel.
 		}
 	}
 
-	return addList, nil
+	return addList, s.tx.TXCommit(pool)
 }
