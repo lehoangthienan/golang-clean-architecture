@@ -9,6 +9,7 @@ type GroupHero struct {
 	Model
 	GroupID *UUID `json:"groupID,omitempty"`
 	HeroID  *UUID `json:"heroID,omitempty"`
+
 	// Preload
 	Group *Group `gorm:"PRELOAD:false" json:"group,omitempty"`
 	Hero  *Hero  `gorm:"PRELOAD:false" json:"hero,omitempty"`

@@ -6,7 +6,7 @@ CREATE TABLE "public"."groups"(
 	"updated_at" timestamptz,
 	"deleted_at" timestamptz,
     "name" text NOT NULL,
-	"creator_id" text not null,
+	"creator_id" uuid NOT NULL,
 	CONSTRAINT "groups_pkey" PRIMARY KEY ("id")
 ) WITH (oids = false);
 

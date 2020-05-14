@@ -136,15 +136,7 @@ func (r *groupRepo) AssignHeroesGroup(ctx context.Context, pool *transaction.Poo
 		return nil, err
 	}
 
-	err = r.db.Preload("Group").Find(&groupHeros).Error
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			err = errors.GroupNotExistError
-		}
-		return nil, err
-	}
-
-	err = r.db.Preload("Hero").Find(groupHeros).Error
+	err = db.Preload("Hero").Preload("Group").Find(&groupHeros).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			err = errors.GroupNotExistError
