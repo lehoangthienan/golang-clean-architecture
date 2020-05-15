@@ -21,6 +21,7 @@ import (
 	authSvc "github.com/lehoangthienan/marvel-heroes-backend/service/auth"
 	groupSvc "github.com/lehoangthienan/marvel-heroes-backend/service/group"
 	heroSvc "github.com/lehoangthienan/marvel-heroes-backend/service/hero"
+	imageSvc "github.com/lehoangthienan/marvel-heroes-backend/service/image"
 	userSvc "github.com/lehoangthienan/marvel-heroes-backend/service/user"
 	serviceGrpc "github.com/lehoangthienan/marvel-heroes-backend/transport/grpc"
 	serviceHttp "github.com/lehoangthienan/marvel-heroes-backend/transport/http"
@@ -102,12 +103,17 @@ func main() {
 			authSvc.NewAuthService(pgDB),
 			authSvc.ValidationMiddleware(),
 		).(authSvc.Service)
+		imageSvc = service.Compose(
+			imageSvc.NewService(),
+			imageSvc.ValidatingMiddleware(),
+		).(imageSvc.Service)
 
 		s = service.Service{
 			UserService:  userSvc,
 			HeroService:  heroSvc,
 			AuthService:  authSvc,
 			GroupService: groupSvc,
+			ImageService: imageSvc,
 		}
 	)
 

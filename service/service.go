@@ -4,6 +4,7 @@ import (
 	"github.com/lehoangthienan/marvel-heroes-backend/service/auth"
 	"github.com/lehoangthienan/marvel-heroes-backend/service/group"
 	"github.com/lehoangthienan/marvel-heroes-backend/service/hero"
+	"github.com/lehoangthienan/marvel-heroes-backend/service/image"
 	"github.com/lehoangthienan/marvel-heroes-backend/service/user"
 )
 
@@ -13,4 +14,5 @@ type Service struct {
 	AuthService  auth.Service
 	HeroService  hero.Service
 	GroupService group.Service
+	ImageService image.Service
 }

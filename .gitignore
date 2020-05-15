@@ -9,3 +9,5 @@ gen_certs.sh
 
 go.mod
 go.sum
+
+uploads

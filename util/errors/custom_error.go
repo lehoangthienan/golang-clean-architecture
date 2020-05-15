@@ -148,3 +148,9 @@ var (
 	GroupnameIsExistedError = newError("Group name Is Existed Error", http.StatusBadRequest)
 	GroupNotExistError      = newError("Group Not Exist Error", http.StatusBadRequest)
 )
+
+//Image
+var (
+	MissingImagesError = newError("Missing Images Error", http.StatusBadRequest)
+	LengthImagesError  = newError("Length Images Error", http.StatusBadRequest)
+)
