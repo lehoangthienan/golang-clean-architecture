@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/jinzhu/gorm"
 	"github.com/lehoangthienan/marvel-heroes-backend/model/domain"
@@ -76,15 +77,16 @@ func (r *userRepo) LogIn(ctx context.Context, pool *transaction.Pool, req *reque
 }
 
 func (r *userRepo) Update(ctx context.Context, pool *transaction.Pool, req *requestModel.UpdateUser) (*responseModel.UpdateUser, error) {
+	fmt.Print("userID")
 	db, _ := helper.UseDBConn(r.db, pool)
-
+	fmt.Print("userID")
 	ctxUserID, check := ctx.Value(contextkey.UserIDContextKey).(string)
 	if !check {
 		return nil, errors.NotLoggedInError
 	}
 
 	userID, _ := domain.UUIDFromString(ctxUserID)
-
+	fmt.Print("userID", userID)
 	user := &domain.User{
 		Model: domain.Model{
 			ID: userID,
