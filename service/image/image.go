@@ -29,10 +29,16 @@ func NewService() Service {
 func (s *imageService) Create(ctx context.Context, req *requestModel.Images) (*responseModel.Images, error) {
 	var wg sync.WaitGroup
 	var err error
+	var rs []string
+	ch := make(chan string)
 
 	for i := 0; i < len(req.Images); i++ {
 		wg.Add(1)
-		go downloadFile("uploads", req.Images[i], &wg)
+		go downloadFile("uploads", req.Images[i], &wg, ch)
+	}
+
+	for i := 0; i < len(req.Images); i++ {
+		rs = append(rs, "/"+<-ch)
 	}
 
 	wg.Wait()
@@ -41,10 +47,11 @@ func (s *imageService) Create(ctx context.Context, req *requestModel.Images) (*r
 		return nil, errors.CreateHeroFailedError
 	}
 
-	return &responseModel.Images{Images: req.Images}, err
+	return &responseModel.Images{Images: rs}, err
 }
 
-func downloadFile(directory string, url string, wg *sync.WaitGroup) error {
+func downloadFile(directory string, url string, wg *sync.WaitGroup, chnl chan string) error {
+	defer wg.Done()
 	var dst image.Image
 
 	// Get the data
@@ -64,6 +71,8 @@ func downloadFile(directory string, url string, wg *sync.WaitGroup) error {
 	//file name
 	filepath := directory + "/" + strconv.Itoa(int(time.Now().UnixNano())) + ".jpg"
 
+	chnl <- filepath
+
 	// Create the file
 	out, err := os.Create(filepath)
 	if err != nil {
@@ -77,8 +86,6 @@ func downloadFile(directory string, url string, wg *sync.WaitGroup) error {
 	// Write the body to file
 	_, err = io.Copy(out, encoded)
 
-	defer wg.Done()
-
 	return err
 }
 
@@ -87,4 +94,13 @@ func encodeImageToJpg(img *image.Image) (*bytes.Buffer, error) {
 	encoded := &bytes.Buffer{}
 	err := jpeg.Encode(encoded, *img, nil)
 	return encoded, err
+}
+
+func (s *imageService) GetImageFile(ctx context.Context, path string) (*os.File, error) {
+	file, err := os.Open("uploads/" + path)
+
+	if err != nil {
+		return nil, err
+	}
+	return file, nil
 }
