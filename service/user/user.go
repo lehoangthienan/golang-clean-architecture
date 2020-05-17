@@ -33,6 +33,7 @@ func (s *userService) Create(ctx context.Context, req requestModel.CreateUser) (
 		PassWord: req.PassWord,
 		Role:     req.Role,
 	})
+
 	if err != nil {
 		s.tx.TXRollBack(pool)
 		return nil, errors.CreateUserFailedError
