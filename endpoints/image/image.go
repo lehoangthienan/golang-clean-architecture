@@ -19,3 +19,17 @@ func MakeCreateImageEndpoint(s service.Service) endpoint.Endpoint {
 		return res, nil
 	}
 }
+
+// MakeGetImageFile func
+func MakeGetImageFile(s service.Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		var path = request.(string)
+		file, err := s.ImageService.GetImageFile(ctx, path)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return file, nil
+	}
+}

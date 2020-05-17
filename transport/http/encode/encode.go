@@ -3,7 +3,9 @@ package encode
 import (
 	"context"
 	"encoding/json"
+	"io"
 	"net/http"
+	"os"
 
 	kithttp "github.com/go-kit/kit/transport/http"
 )
@@ -11,6 +13,15 @@ import (
 // EncodeResponse func
 func EncodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	return kithttp.EncodeJSONResponse(ctx, w, response)
+}
+
+// EncodeFileResponse func
+func EncodeFileResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+	w.Header().Set("Content-Type", "image/jpeg")
+	file := response.(*os.File)
+	defer file.Close()
+	_, err := io.Copy(w, file)
+	return err
 }
 
 // EncodeError func
